@@ -12,6 +12,7 @@ import ProfileSetup from './Page-Components/ProfileSetup.jsx';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 import myColors from './assets/Util/myColors.js';
+import Login from './Page-Components/Login.jsx';
 
 
 const router = createBrowserRouter([
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <ProfileSetup />
+      },
+      {
+        path: "/login",
+        element: <Login />
       },
     ]
   }
