@@ -468,7 +468,10 @@ const ProfileSetup = () => {
                 //ease: "easeIn"
             }}
         >
-            <Grid container xs={12} md={9}>
+            <Grid container p={{
+                xs: 3,
+                md: 4
+            }}  className={profileSetupStyles.cardContainer} sx={{ backgroundColor : myColors.backgroundGrey, borderColor: myColors.backgroundGreyV2}} xs={12} md={9}>
                 <Grid item xs={12}  >
 
                     <InputLabel htmlFor="fullName">
@@ -650,7 +653,10 @@ const ProfileSetup = () => {
                 //ease: "easeIn"
             }}
         >
-            <Grid container xs={12} md={9}>
+            <Grid container p={{
+                xs: 3,
+                md: 4
+            }}  className={profileSetupStyles.cardContainer} sx={{ backgroundColor : myColors.backgroundGrey, borderColor: myColors.backgroundGreyV2}} xs={12} md={9}>
                 <Grid item xs={12} md={9}>
                     <Typography fontWeight={300} variant="h6">
                         Company Details
@@ -783,8 +789,8 @@ const ProfileSetup = () => {
 
     return (
         <>
-            <Grid container justifyContent={'center'}>
-                <Grid item mb={5} mt={15} xs={10} md={6}>
+            <Grid container   justifyContent={'center'}>
+                <Grid item mb={5} mt={15} xs={11} md={6}>
 
                     <Grid item mb={1} xs={12} >
                         <Typography fontWeight={500} variant="h4">

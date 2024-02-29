@@ -3,3 +3,10 @@
 .roundedTextFeild {
     border-radius: 20px;
 }
+
+.cardContainer {
+    border-radius: 16px ;
+    border-width: 2px;
+    border-style: solid;
+    box-shadow: 3px 11px 9px rgba(0, 0, 0, 0.5);
+}
