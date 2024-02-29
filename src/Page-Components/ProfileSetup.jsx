@@ -1,10 +1,13 @@
-import { Button, Grid, InputBase, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from "@mui/material";
+import { Button, FormHelperText, Grid, InputBase, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from "@mui/material";
 
 import { alpha, styled } from '@mui/material/styles';
 
 import profileSetupStyles from "./ProfileSetup.module.css"
 import myColors from "../assets/Util/myColors";
 import { useReducer, useState } from "react";
+import formVerification from "../assets/Util/formVerification";
+import { motion } from "framer-motion"
+import { useAnimation } from "framer-motion";
 
 
 
@@ -331,92 +334,178 @@ const ProfileSetup = () => {
 
 
     const [roleValues, setRole] = useState(['Shipper', 'Carrier', 'Dispatcher', 'Broker', 'Admin', 'Other'])
-    return (
-        <>
-            <Grid container justifyContent={'center'}>
-                <Grid item mt={15}  xs={10} md={6}>
+    const formValuesreducer = (state, action) => {
 
-                    <Grid item mb={1} xs={12} >
-                        <Typography fontWeight={500} variant="h4">
-                            Profile
-                        </Typography>
-                    </Grid>
-                    <Grid item mb={2} xs={12} md={9}>
-                        <Typography  variant="body1">
-                            Step 1 of 2
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={9}>
-                        <InputLabel htmlFor="fullName">
-                            Full Name
-                        </InputLabel>
-                        <StyledInput fullWidth id="fullName" placeholder="John Doe" variant="outlined" />
-                    </Grid>
-                    <Grid mt={3} item xs={12} md={9}>
-                        <InputLabel htmlFor="fullName">
-                            Email
-                        </InputLabel>
-                        <StyledInput fullWidth id="email" placeholder="john.doe@gmail.com" variant="outlined" />
+        let myState = {};
+        switch (action.type) {
+            case "updateFeild":
+                myState = { ...state };
+                myState[action.feildName].value = action.value
+                return myState;
+            //break;
+            case "validateFeild":
+                myState = { ...state };
+                let errorResult = formVerification(myState[action.feildName].value, myState[action.feildName].validations);
+                myState[action.feildName].ok = errorResult.ok;
+                myState[action.feildName].helperText = errorResult.message;
+                return myState;
+            //break;
 
-                    </Grid>
+        }
+    }
+    const [formValues, formValuesDispatch] = useReducer(formValuesreducer, {
+        fullName: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty'],
 
-                    <Grid mt={3} container justifyContent={'space-between'} xs={12} md={9}>
-                        <Grid item xs={4}>
-                            <InputLabel id="selectLabel" htmlFor="fullName">
-                                Country Code
-                            </InputLabel>
-                            <Select
-                                labelId="selectLabel"
-                                id="countryCode"
-                                //value={age}
-                                sx={{
-                                    maxHeight: '300px'
-                                }}
-                                fullWidth
-                                //onChange={handleChange}
-                                displayEmpty
-                                input={<StyledInput />}
+        },
+        email: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty', 'isEmail']
+        },
+        countryCode: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty']
+        },
+        phnNumber: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty', 'isPhnNumber']
+        },
+        role: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty']
+        },
+        other: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty']
+        },
+        companyName: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty']
+        },
+        companyAddress: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty']
+        },
+        city: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty']
+        },
+        state: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty']
+        },
+        zipCode: {
+            value: '',
+            ok: true,
+            helperText: '',
+            validations: ['isNotEmpty']
+        }
+    })
+    const updateFeildHandler = (value, feildName) => {
+        let updateFeildAction = {
+            type: 'updateFeild',
+            feildName: feildName,
+            value: value,
 
-                                MenuProps={{
-                                    sx: {
-                                        maxHeight: '300px'
-                                    }
-                                }}
-                                renderValue={() => {
-                                    return (
+        }
+        formValuesDispatch(updateFeildAction);
+    }
 
-                                        <span style={{
-                                            color: 'rgba(0,0,0,0.4)',
-                                            fontWeight: 400
-                                        }}>+1 United States</span>
-                                    )
-                                }}
-                            >
-                                <MenuItem disabled value=''>Country Codes</MenuItem>
-                                {countryCodes.map((countryCode) => {
-                                    return (
+    const validateFeildHandler = (feildName) => {
+        let validateFeildAction = {
+            type: 'validateFeild',
+            feildName: feildName
+        }
+        formValuesDispatch(validateFeildAction);
+    }
+    const errorStyle = {
+        color: myColors.orange.main,
+        fontWeight: 500
+    }
+    const animationVariants = {
+        //hidden: { x:-100, opacity: 0 },
+        visible: { x: 0, opacity: 1 },
+        hidden: { x: 0, rotateY: -90, opacity: 0 },
+        exit: { x:0, rotateY: -90, opacity: 0 },
+        entry: { x: 0, rotateY: 0, opacity: 1 }
+    }
+    var step1Controls = useAnimation()
+    var step2Controls = useAnimation()
+    let step1 =
+        <motion.div
+            variants={animationVariants}
+            // style={{
+            //     height: '100%',
 
-                                        <MenuItem key={countryCode.iso} value={countryCode.code}>{`+${countryCode.code} ${countryCode.country}`}</MenuItem>
+            //     //backgroundColor: 'transparent'
+            // }}
+            initial="visible"
+            animate={step1Controls}
+            transition={{
+                duration: 0.9,
+                //delay: 0.5
+                //ease: "easeIn"
+            }}
+        >
+            <Grid container xs={12} md={9}>
+                <Grid item xs={12}  >
 
-                                    )
-                                })}
+                    <InputLabel htmlFor="fullName">
+                        Full Name
+                    </InputLabel>
+                    <StyledInput value={formValues.fullName.value} onChange={(e) => {
+                        updateFeildHandler(e.target.value, 'fullName');
+                        validateFeildHandler('fullName');
 
-                            </Select>
-                        </Grid>
-                        <Grid item xs={7}>
-                            <InputLabel htmlFor="phoneNumber">
-                                Phone Number
-                            </InputLabel>
-                            <StyledInput fullWidth id="phoneNumber" placeholder="62841XXXX4" variant="outlined" />
-                        </Grid>
-                    </Grid>
-                    <Grid mt={3} item xs={12} md={9}>
-                        <InputLabel id="roleLabel" htmlFor="role">
-                            You Are A...?
+                    }} onBlur={() => {
+                        validateFeildHandler('fullName');
+                    }} fullWidth id="fullName" placeholder="John Doe" variant="outlined" />
+                    <FormHelperText disabled={!formValues.fullName.ok} error={true} > <span style={errorStyle}>{formValues.fullName.helperText}</span></FormHelperText>
+                </Grid>
+                <Grid mt={3} item xs={12}>
+                    <InputLabel htmlFor="fullName">
+                        Email
+                    </InputLabel>
+                    <StyledInput value={formValues.email.value} onChange={(e) => {
+                        updateFeildHandler(e.target.value, 'email');
+                        validateFeildHandler('email');
+
+                    }} onBlur={() => {
+                        validateFeildHandler('email');
+                    }} fullWidth id="email" placeholder="john.doe@gmail.com" variant="outlined" />
+                    <FormHelperText disabled={!formValues.email.ok} error={true} > <span style={errorStyle}>{formValues.email.helperText}</span></FormHelperText>
+
+                </Grid>
+
+                <Grid mt={3} xs={12} container justifyContent={'space-between'}>
+                    <Grid item xs={4}>
+                        <InputLabel id="selectLabel" htmlFor="fullName">
+                            Country Code
                         </InputLabel>
                         <Select
-                            labelId="roleLabel"
-                            id="role"
+                            labelId="selectLabel"
+                            id="countryCode"
                             //value={age}
                             sx={{
                                 maxHeight: '300px'
@@ -428,41 +517,293 @@ const ProfileSetup = () => {
 
                             MenuProps={{
                                 sx: {
-                                    maxHeight: '250px'
+                                    maxHeight: '300px'
                                 }
                             }}
-                            renderValue={() => {
-                                return (
+                            // defaultValue={() => {
+                            //     return (
 
-                                    <span style={{
-                                        color: 'rgba(0,0,0,0.4)',
-                                        fontWeight: 400
-                                    }}>Role</span>
-                                )
+
+                            //     )
+                            // }}
+                            value={formValues.countryCode.value} onChange={(e) => {
+                                updateFeildHandler(e.target.value, 'countryCode');
+                                validateFeildHandler('countryCode');
+
+                            }} onBlur={() => {
+                                validateFeildHandler('countryCode');
                             }}
                         >
-                            <MenuItem selected disabled value=''>Role</MenuItem>
-                            {
-                                roleValues.map((role) => {
-                                    return (
-                                        <MenuItem value={role} key={role}>{role}</MenuItem>
-                                    )
-                                })
-                            }
+                            <MenuItem disabled value=''> <span style={{
+                                color: 'rgba(0,0,0,0.4)',
+                                fontWeight: 400
+                            }}>+1XX Country</span></MenuItem>
+                            {countryCodes.map((countryCode) => {
+                                return (
+
+                                    <MenuItem key={countryCode.iso} value={countryCode.code}>{`+${countryCode.code} ${countryCode.country}`}</MenuItem>
+
+                                )
+                            })}
+
                         </Select>
+                        <FormHelperText disabled={!formValues.countryCode.ok} error={true} > <span style={errorStyle}>{formValues.countryCode.helperText}</span></FormHelperText>
 
                     </Grid>
-                    <Grid mt={3} item xs={12} md={9}>
-                        <InputLabel htmlFor="Other">
-                            Other
+                    <Grid item xs={7}>
+                        <InputLabel htmlFor="phoneNumber">
+                            Phone Number
                         </InputLabel>
-                        <StyledInput fullWidth id="Other" placeholder="Accountant or Assistant..." variant="outlined" />
+                        <StyledInput value={formValues.phnNumber.value} onChange={(e) => {
+                            updateFeildHandler(e.target.value, 'phnNumber');
+                            validateFeildHandler('phnNumber');
+
+                        }} onBlur={() => {
+                            validateFeildHandler('phnNumber');
+                        }} fullWidth id="phoneNumber" placeholder="62841XXXX4" variant="outlined" />
+                        <FormHelperText disabled={!formValues.phnNumber.ok} error={true} > <span style={errorStyle}>{formValues.phnNumber.helperText}</span></FormHelperText>
+
                     </Grid>
-                    <Grid mt={3} item xs={12} md={9}>
-                        <Button variant="contained" sx={{
-                            color: '#212100'
-                        }} size="normal" color="lightOrange"> Next </Button>
+                </Grid>
+                <Grid mt={3} xs={12} item >
+                    <InputLabel id="roleLabel" htmlFor="role">
+                        You Are A...?
+                    </InputLabel>
+                    <Select
+                        labelId="roleLabel"
+                        id="role"
+                        //value={age}
+                        sx={{
+                            maxHeight: '300px'
+                        }}
+                        fullWidth
+                        //onChange={handleChange}
+                        displayEmpty
+                        input={<StyledInput />}
+
+                        MenuProps={{
+                            sx: {
+                                maxHeight: '250px'
+                            }
+                        }}
+                        // renderValue={() => {
+                        //     return (
+
+
+                        //     )
+                        // }}
+                        value={formValues.role.value} onChange={(e) => {
+                            updateFeildHandler(e.target.value, 'role');
+                            validateFeildHandler('role');
+
+                        }} onBlur={() => {
+                            validateFeildHandler('role');
+                        }}
+
+                    >
+                        <MenuItem selected disabled value=''> <span style={{
+                            color: 'rgba(0,0,0,0.4)',
+                            fontWeight: 400
+                        }}>Magician</span></MenuItem>
+                        {
+                            roleValues.map((role) => {
+                                return (
+                                    <MenuItem value={role} key={role}>{role}</MenuItem>
+                                )
+                            })
+                        }
+                    </Select>
+                    <FormHelperText disabled={!formValues.role.ok} error={true} > <span style={errorStyle}>{formValues.role.helperText}</span></FormHelperText>
+
+                </Grid>
+                {(formValues.role.value == 'Other') && <Grid mt={3} xs={12} item >
+                    <InputLabel htmlFor="Other">
+                        Other
+                    </InputLabel>
+                    <StyledInput value={formValues.other.value} onChange={(e) => {
+                        updateFeildHandler(e.target.value, 'other');
+                        validateFeildHandler('other');
+
+                    }} onBlur={() => {
+                        validateFeildHandler('other');
+                    }} fullWidth id="Other" placeholder="Accountant or Assistant..." variant="outlined" />
+                    <FormHelperText disabled={!formValues.other.ok} > <span style={errorStyle}>{formValues.other.helperText}</span></FormHelperText>
+
+                </Grid>}
+            </Grid>
+        </motion.div>
+
+
+    let step2 =
+        <motion.div
+            variants={animationVariants}
+            // style={{
+            //     height: '100%',
+
+            //     //backgroundColor: 'transparent'
+            // }}
+            initial="hidden"
+            animate={step2Controls}
+            transition={{
+                duration: 0.9,
+                //delay: 0.5
+                //ease: "easeIn"
+            }}
+        >
+            <Grid container xs={12} md={9}>
+                <Grid item xs={12} md={9}>
+                    <Typography fontWeight={300} variant="h6">
+                        Company Details
+                    </Typography>
+
+
+                </Grid>
+                <Grid mt={3} item xs={12} md={9}>
+                    <InputLabel htmlFor="companyName">
+                        Company Name
+                    </InputLabel>
+                    <StyledInput value={formValues.companyName.value} onChange={(e) => {
+                        updateFeildHandler(e.target.value, 'companyName');
+                        validateFeildHandler('companyName');
+
+                    }} onBlur={() => {
+                        validateFeildHandler('companyName');
+                    }} fullWidth id="fullName" placeholder="Moon Trucks Corp." variant="outlined" />
+                    <FormHelperText disabled={!formValues.companyName.ok}   > <span style={errorStyle}>{formValues.companyName.helperText}</span></FormHelperText>
+                </Grid>
+                <Grid mt={3} item xs={12} md={9}>
+                    <InputLabel htmlFor="companyAddress">
+                        Address
+                    </InputLabel>
+                    <StyledInput multiline={true} rows={3} value={formValues.companyAddress.value} onChange={(e) => {
+                        updateFeildHandler(e.target.value, 'companyAddress');
+                        validateFeildHandler('companyAddress');
+
+                    }} onBlur={() => {
+                        validateFeildHandler('companyAddress');
+                    }} fullWidth id="companyAddress" placeholder="#172/7 XYZ street, Moon road, Mars city, Milky Way..." variant="outlined" />
+                    <FormHelperText disabled={!formValues.companyAddress.ok}   > <span style={errorStyle}>{formValues.companyAddress.helperText}</span></FormHelperText>
+                </Grid>
+                <Grid item mt={3} xs={12} md={9}>
+
+                    <Grid container spacing={2}  >
+                        <Grid item xs={12} md={4}>
+
+                            <InputLabel htmlFor="city">
+                                City
+                            </InputLabel>
+                            <StyledInput value={formValues.city.value} onChange={(e) => {
+                                updateFeildHandler(e.target.value, 'city');
+                                validateFeildHandler('city');
+
+                            }} onBlur={() => {
+                                validateFeildHandler('city');
+                            }} fullWidth id="city" placeholder="Mars City" variant="outlined" />
+                            <FormHelperText disabled={!formValues.city.ok}   > <span style={errorStyle}>{formValues.city.helperText}</span></FormHelperText>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+
+                            <InputLabel htmlFor="state">
+                                State
+                            </InputLabel>
+                            <StyledInput value={formValues.state.value} onChange={(e) => {
+                                updateFeildHandler(e.target.value, 'state');
+                                validateFeildHandler('state');
+
+                            }} onBlur={() => {
+                                validateFeildHandler('state');
+                            }} fullWidth id="state" placeholder="Milky Way" variant="outlined" />
+                            <FormHelperText disabled={!formValues.state.ok}   > <span style={errorStyle}>{formValues.state.helperText}</span></FormHelperText>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+
+                            <InputLabel htmlFor="zipCode">
+                                Zip Code
+                            </InputLabel>
+                            <StyledInput value={formValues.zipCode.value} onChange={(e) => {
+                                updateFeildHandler(e.target.value, 'zipCode');
+                                validateFeildHandler('zipCode');
+
+                            }} onBlur={() => {
+                                validateFeildHandler('zipCode');
+                            }} fullWidth id="zipCode" placeholder="7XXX45" variant="outlined" />
+                            <FormHelperText disabled={!formValues.zipCode.ok}   > <span style={errorStyle}>{formValues.zipCode.helperText}</span></FormHelperText>
+                        </Grid>
                     </Grid>
+                </Grid>
+            </Grid>
+        </motion.div>
+
+
+
+    const [step, setStep] = useState(1)
+
+    const nextButton = <>
+        <Grid mt={3} item xs={12} md={9}>
+            <Button variant="contained" sx={{
+                color: '#212100'
+            }} onClick={() => {
+                step1Controls.start('exit');
+                // let mycontrolerFunction = (controller,variant)=>{
+                //     controller.start(variant);
+                // }
+                setTimeout(() => {
+                    setStep(2)
+                    
+                }, 500)
+                setTimeout(()=>{
+
+                    step2Controls.start('entry')
+                },550)
+            }} size="normal" color="lightOrange">
+                Next
+            </Button>
+        </Grid>
+    </>
+
+    const prevButton = <>
+        <Grid mt={3} item xs={12} md={9}>
+            <Button variant="contained" sx={{
+                color: '#212100'
+            }} onClick={() => {
+                step2Controls.start('exit')
+                
+                setTimeout(() => {
+                    setStep(1)
+                    
+                    
+                }, 500)
+                setTimeout(()=>{
+
+                    step1Controls.start('entry')
+                },550)
+            }} size="normal" color="lightOrange"> Previous </Button>
+        </Grid>
+    </>
+
+    return (
+        <>
+            <Grid container justifyContent={'center'}>
+                <Grid item mb={5} mt={15} xs={10} md={6}>
+
+                    <Grid item mb={1} xs={12} >
+                        <Typography fontWeight={500} variant="h4">
+                            Profile
+                        </Typography>
+                    </Grid>
+                    <Grid item mb={2} xs={12} md={9}>
+                        <Typography variant="body1">
+                            Step <span style={{ color: myColors.orange.light, fontWeight: 500 }}>{step}</span> of <span style={{ color: myColors.orange.main, fontWeight: 500 }}>2</span>
+                        </Typography>
+                    </Grid>
+                    { step == 1 ? step1 : step2 }
+                    
+
+                    {
+                        step == 1 ? nextButton : prevButton
+                    }
+
+
                 </Grid>
             </Grid>
         </>

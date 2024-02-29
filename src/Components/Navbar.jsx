@@ -21,8 +21,8 @@ const Navbar = () => {
     return (
         <>
             <Box ref={myref} sx={{ flexGrow: 1 }}>
-                <AppBar color={'backgroundGrey'} position="fixed">
-                    <Toolbar>
+                <AppBar m={0} p={0} color={'backgroundGrey'} position="fixed">
+                    <Toolbar p={0} m={0}>
                         {/* <IconButton
                             size="large"
                             edge="start"
@@ -32,8 +32,15 @@ const Navbar = () => {
                         >
                             <MenuIcon />
                         </IconButton> */}
-                        <Box mb={1} mt={2} component="div" sx={{ flexGrow: 1 }}>
-                            <img alt="OLMS-LOGO" height={'50px'} src={logo}></img>
+                        <Box mb={1} mt={1} sx={{
+                            flexGrow: 1,
+                            height: {
+                                xs: '2.5em',
+                                md: '3.5em'
+                            }
+                             
+                        }} component="div" >
+                            <img alt="OLMS-LOGO" height={'100%'} src={logo}></img>
                         </Box>
                         <Button color="inherit">Login</Button>
                     </Toolbar>
