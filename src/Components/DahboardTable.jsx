@@ -20,6 +20,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { visuallyHidden } from '@mui/utils';
 import myColors from '../assets/Util/myColors';
 import links from '../assets/Util/links';
@@ -126,7 +128,7 @@ function EnhancedTableHead(props) {
 
     return (
         <TableHead>
-            <TableRow>
+            <TableRow >
                 <TableCell padding="checkbox">
                     <Checkbox
                         color="primary"
@@ -145,7 +147,12 @@ function EnhancedTableHead(props) {
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
-                        <TableSortLabel
+                        <TableSortLabel sx={{
+                fontSize: {
+                    xs: '0.8rem',
+                    md: '0.875rem'
+                }
+            }}
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
                             onClick={createSortHandler(headCell.id)}
@@ -189,7 +196,9 @@ function EnhancedTableToolbar(props) {
         >
             {numSelected > 0 ? (
                 <Typography
-                    sx={{ flex: '1 1 100%' }}
+                    sx={{ flex: '1 1 100%',
+                    
+                }}
                     color="inherit"
                     variant="subtitle1"
                     component="div"
@@ -198,7 +207,10 @@ function EnhancedTableToolbar(props) {
                 </Typography>
             ) : (
                 <Typography
-                    sx={{ flex: '1 1 100%' }}
+                    sx={{ flex: '1 1 100%',fontSize: {
+                        xs: '1rem',
+                        md: '1.25rem'
+                    } }}
                     variant="h6"
                     id="tableTitle"
                     component="div"
@@ -209,11 +221,18 @@ function EnhancedTableToolbar(props) {
             )}
 
             {numSelected > 0 ? (
-                <Tooltip title="Delete">
+                <>
+                <Tooltip title="Approve">
                     <IconButton>
-                        <DeleteIcon />
+                        <CheckCircleIcon color='success' />
                     </IconButton>
                 </Tooltip>
+                <Tooltip title="Dis-Approve">
+                <IconButton>
+                    <CancelIcon color='error' />
+                </IconButton>
+            </Tooltip>
+                </>
             ) : (
                 <Tooltip title="Filter list">
                     <IconButton>
@@ -248,7 +267,7 @@ export default function DashboardTable(tableProps) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = myRows.map((n) => n.id);
+            const newSelected = myRows.map((n) => n._id);
             setSelected(newSelected);
             return;
         }
@@ -378,7 +397,7 @@ export default function DashboardTable(tableProps) {
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2, backgroundColor: myColors.backgroundGrey }}>
-                <EnhancedTableToolbar numSelected={selected.length} myRows={myRows} title={tableProps.title} />
+                <EnhancedTableToolbar  numSelected={selected.length} myRows={myRows} title={tableProps.title} />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
@@ -406,7 +425,7 @@ export default function DashboardTable(tableProps) {
                                         role="checkbox"
                                         aria-checked={isItemSelected}
                                         tabIndex={-1}
-                                        key={row.id}
+                                        key={row._id}
                                         selected={isItemSelected}
                                         sx={{ cursor: 'pointer' }}
                                     >
@@ -426,7 +445,12 @@ export default function DashboardTable(tableProps) {
                                             else {
 
                                                 return (
-                                                    <TableCell align="left">{row[key].toString()}</TableCell>
+                                                    <TableCell sx={{
+                                                        fontSize: {
+                                                            xs: '0.8rem',
+                                                            md: '0.875rem'
+                                                        }
+                                                    }} align="left">{row[key].toString()}</TableCell>
                                                 )
                                             }
                                         })}

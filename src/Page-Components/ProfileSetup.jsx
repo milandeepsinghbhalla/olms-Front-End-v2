@@ -4,7 +4,7 @@ import { alpha, styled } from '@mui/material/styles';
 
 import profileSetupStyles from "./ProfileSetup.module.css"
 import myColors from "../assets/Util/myColors";
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import formVerification from "../assets/Util/formVerification";
 import { motion } from "framer-motion"
 import { useAnimation } from "framer-motion";
@@ -333,6 +333,10 @@ const ProfileSetup = () => {
     { "country": "Zambia", "code": "260", "iso": "ZM" },
     { "country": "Zimbabwe", "code": "263", "iso": "ZW" }])
 
+    const [canCreateProfile, setCanCreateProfile] = useState(false);
+    const [canGoNext, setCanGoNext] = useState(false);
+    let step1Feilds = ['fullName','email','countryCode','phnNumber','role'];
+    let step2Feilds = ['companyName','companyAddress','city','state','zipCode'];
 
     const [roleValues, setRole] = useState(['Shipper', 'Carrier', 'Dispatcher', 'Broker', 'Admin', 'Other'])
     const formValuesreducer = (state, action) => {
@@ -747,8 +751,8 @@ const ProfileSetup = () => {
 
     const nextButton = <>
         <Grid mt={3} item xs={12} md={9}>
-            <Button variant="contained" sx={{
-                color: '#212100'
+            <Button variant="contained" disabled={!canGoNext}  sx={{
+                color: myColors.textBlack
             }} onClick={() => {
                 step1Controls.start('exit');
                 // let mycontrolerFunction = (controller,variant)=>{
@@ -809,7 +813,7 @@ const ProfileSetup = () => {
 
     const prevButton = <>
         <Grid mt={3} container xs={12} md={9}>
-            <Grid item xs={6}>
+            <Grid item xs={4} md={3}>
 
                 <Button variant="contained" sx={{
                     color: '#212100'
@@ -828,8 +832,10 @@ const ProfileSetup = () => {
                 }} size="normal" color="lightOrange"> Previous </Button>
             </Grid>
 
-            <Grid item xs={6}>
-                <Button variant="Contained" color="textBlack" onClick={() => {
+            <Grid item xs={8} md={9}>
+                <Button variant="contained" color="textBlack" sx={{
+                    color: myColors.backgroundGrey
+                }} disabled={!canCreateProfile} onClick={() => {
                     profileSetupSubmitHandler();
                 }}>
                     Create Profile
@@ -838,10 +844,47 @@ const ProfileSetup = () => {
         </Grid>
     </>
 
+    useEffect(()=>{
+        // check step1 feilds
+        let step1Flag = false
+        step1Feilds.some((feild)=>{
+            if(formValues[feild].value.length!=0 && formValues[feild].ok){
+                step1Flag = true
+            }
+            else{
+                step1Flag = false;
+                return true;
+            }
+            return false;
+        })
+        if(formValues.role.value=='Other'){
+            if(formValues.other.value.length!=0 && formValues.other.ok){
+                step1Flag = true
+            }
+            else{
+                step1Flag = false
+            }
+        }
+        setCanGoNext(step1Flag);
+        let allFeilds = step1Feilds.concat(step2Feilds);
+        let allFeildsFlag = false;
+        allFeilds.some((feild)=>{
+            if(formValues[feild].value.length!=0 && formValues[feild].ok){
+                allFeildsFlag = true
+            }
+            else{
+                allFeildsFlag = false;
+                return true;
+            }
+            return false;
+        })
+        setCanCreateProfile(allFeildsFlag);
+    },[formValues])
+
     return (
         <>
             <Grid container justifyContent={'center'}>
-                <Grid item mb={5} mt={15} xs={11} md={6}>
+                <Grid item mb={5} mt={7} xs={11} md={6}>
 
                     <Grid item mb={1} xs={12} >
                         <Typography fontWeight={500} variant="h4">

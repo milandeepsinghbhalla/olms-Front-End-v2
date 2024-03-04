@@ -215,7 +215,15 @@ const AdminDashboard = () => {
 
                                     </Tabs>
                                 </Box>
-                                <TabPanel value="1"><DashboardTable title="User Approvals" apiUrl='/user-approvals'/></TabPanel>
+                                <TabPanel sx={{
+                                    paddingX: {
+                                        xs: 1.5,
+                                        md: 2
+                                    },
+                                    fontSize: {
+                                        xs: '0.6em'
+                                    }
+                                }} value="1"><DashboardTable title="User Approvals" apiUrl='/user-approvals'/></TabPanel>
                                 <TabPanel value="2">Shippers Management Table will be added soon...!!</TabPanel>
                                 <TabPanel value="3">Carriers Management Table will be added soon...!!</TabPanel>
                                 <TabPanel value="4">Dispathcers Management Table will be added soon...!!</TabPanel>

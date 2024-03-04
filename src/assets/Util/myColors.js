@@ -12,7 +12,7 @@ const myColors = {
 
     backgroundGrey: '#F5F5F5',
     backgroundGreyV2: '#E6EDF3',
-    textBlack: '#212100'
+    textBlack: '#28282B'
 
 }
 
