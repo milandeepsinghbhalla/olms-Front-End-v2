@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import myColors from '../assets/Util/myColors';
 import logo from '../assets/images/logo.png'
 import { useEffect, useRef, useState } from 'react';
@@ -16,12 +16,14 @@ const Navbar = () => {
     const [myHeight, setMyHeight] = useState(null);
     useEffect(() => {
         setMyHeight(myref.current.clientHeight + 'px')
+        console.log(` nav height - ${myref.current.clientHeight + 'px'}`)
+        localStorage.setItem('navbarHeight',myref.current.clientHeight + 'px')
     }, [])
 
     return (
         <>
-            <Box ref={myref} sx={{ flexGrow: 1 }}>
-                <AppBar m={0} p={0} color={'backgroundGrey'} position="fixed">
+            <Box zIndex={999} sx={{ flexGrow: 1 }}>
+                <AppBar  ref={myref} m={0} p={0} color={'backgroundGrey'} position="fixed">
                     <Toolbar p={0} m={0}>
                         {/* <IconButton
                             size="large"
@@ -42,7 +44,8 @@ const Navbar = () => {
                         }} component="div" >
                             <img alt="OLMS-LOGO" height={'100%'} src={logo}></img>
                         </Box>
-                        <Button color="inherit">Login</Button>
+                        <Link to='/login'><Button color="inherit">Login</Button></Link>
+                        <Link to='/dashboard'><Button color="inherit">Dashboard</Button></Link> 
                     </Toolbar>
                 </AppBar>
             </Box>

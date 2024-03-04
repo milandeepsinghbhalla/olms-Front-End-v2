@@ -13,6 +13,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 import myColors from './assets/Util/myColors.js';
 import Login from './Page-Components/Login.jsx';
+import AdminDashboard from './Page-Components/AdminDashboard.jsx';
 
 
 const router = createBrowserRouter([
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />
+      },
+      {
+        path: "/dashboard",
+        element: <AdminDashboard />
       },
     ]
   }
@@ -43,16 +48,19 @@ const theme = createTheme({
     },
     lightOrange: {
       main: myColors.orange.light
+    },
+    textBlack : {
+      main: myColors.textBlack
     }
   }
 })
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  
     <ThemeProvider theme={theme}>
 
       <RouterProvider router={router} />
     </ThemeProvider>
-  </React.StrictMode>,
+  
 )

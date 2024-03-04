@@ -8,6 +8,7 @@ import { useReducer, useState } from "react";
 import formVerification from "../assets/Util/formVerification";
 import { motion } from "framer-motion"
 import { useAnimation } from "framer-motion";
+import links from "../assets/Util/links";
 
 
 
@@ -447,7 +448,7 @@ const ProfileSetup = () => {
         //hidden: { x:-100, opacity: 0 },
         visible: { x: 0, opacity: 1 },
         hidden: { x: 0, rotateY: -90, opacity: 0 },
-        exit: { x:0, rotateY: -90, opacity: 0 },
+        exit: { x: 0, rotateY: -90, opacity: 0 },
         entry: { x: 0, rotateY: 0, opacity: 1 }
     }
     var step1Controls = useAnimation()
@@ -471,7 +472,7 @@ const ProfileSetup = () => {
             <Grid container p={{
                 xs: 3,
                 md: 4
-            }}  className={profileSetupStyles.cardContainer} sx={{ backgroundColor : myColors.backgroundGrey, borderColor: myColors.backgroundGreyV2}} xs={12} md={9}>
+            }} className={profileSetupStyles.cardContainer} sx={{ backgroundColor: myColors.backgroundGrey, borderColor: myColors.backgroundGreyV2 }} xs={12} md={9}>
                 <Grid item xs={12}  >
 
                     <InputLabel htmlFor="fullName">
@@ -656,7 +657,7 @@ const ProfileSetup = () => {
             <Grid container p={{
                 xs: 3,
                 md: 4
-            }}  className={profileSetupStyles.cardContainer} sx={{ backgroundColor : myColors.backgroundGrey, borderColor: myColors.backgroundGreyV2}} xs={12} md={9}>
+            }} className={profileSetupStyles.cardContainer} sx={{ backgroundColor: myColors.backgroundGrey, borderColor: myColors.backgroundGreyV2 }} xs={12} md={9}>
                 <Grid item xs={12} md={9}>
                     <Typography fontWeight={300} variant="h6">
                         Company Details
@@ -755,41 +756,91 @@ const ProfileSetup = () => {
                 // }
                 setTimeout(() => {
                     setStep(2)
-                    
+
                 }, 500)
-                setTimeout(()=>{
+                setTimeout(() => {
 
                     step2Controls.start('entry')
-                },550)
+                }, 550)
             }} size="normal" color="lightOrange">
                 Next
             </Button>
         </Grid>
     </>
 
-    const prevButton = <>
-        <Grid mt={3} item xs={12} md={9}>
-            <Button variant="contained" sx={{
-                color: '#212100'
-            }} onClick={() => {
-                step2Controls.start('exit')
-                
-                setTimeout(() => {
-                    setStep(1)
-                    
-                    
-                }, 500)
-                setTimeout(()=>{
 
-                    step1Controls.start('entry')
-                },550)
-            }} size="normal" color="lightOrange"> Previous </Button>
+    const profileSetupSubmitHandler = async () => {
+        let obj = {}
+        for (let prop in formValues) {
+            obj[prop] = ((formValues[prop].value).trim()).toLowerCase()
+        }
+
+        try{
+
+            const response = await fetch(links.backendUrl + '/profile-setup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            })
+
+            if(response.status< 200 || response.status> 299){
+                // throw error
+                const error = await response.json();
+                console.log('response error- ',error);
+                let myError = {
+                    message: error.message
+                }
+                throw myError;
+            }
+            else{
+                //extract Data
+                alert('successs...!!!')
+                const success = await response.json();
+                console.log('success data---',success);
+            }
+        }
+        catch (err) {
+            console.log('myError-- ',err);
+            alert(err.message);
+        }
+    }
+
+    const prevButton = <>
+        <Grid mt={3} container xs={12} md={9}>
+            <Grid item xs={6}>
+
+                <Button variant="contained" sx={{
+                    color: '#212100'
+                }} onClick={() => {
+                    step2Controls.start('exit')
+
+                    setTimeout(() => {
+                        setStep(1)
+
+
+                    }, 500)
+                    setTimeout(() => {
+
+                        step1Controls.start('entry')
+                    }, 550)
+                }} size="normal" color="lightOrange"> Previous </Button>
+            </Grid>
+
+            <Grid item xs={6}>
+                <Button variant="Contained" color="textBlack" onClick={() => {
+                    profileSetupSubmitHandler();
+                }}>
+                    Create Profile
+                </Button>
+            </Grid>
         </Grid>
     </>
 
     return (
         <>
-            <Grid container   justifyContent={'center'}>
+            <Grid container justifyContent={'center'}>
                 <Grid item mb={5} mt={15} xs={11} md={6}>
 
                     <Grid item mb={1} xs={12} >
@@ -802,8 +853,8 @@ const ProfileSetup = () => {
                             Step <span style={{ color: myColors.orange.light, fontWeight: 500 }}>{step}</span> of <span style={{ color: myColors.orange.main, fontWeight: 500 }}>2</span>
                         </Typography>
                     </Grid>
-                    { step == 1 ? step1 : step2 }
-                    
+                    {step == 1 ? step1 : step2}
+
 
                     {
                         step == 1 ? nextButton : prevButton
