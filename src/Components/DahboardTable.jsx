@@ -223,7 +223,7 @@ function EnhancedTableToolbar(props) {
             {numSelected > 0 ? (
                 <>
                 <Tooltip title="Approve">
-                    <IconButton>
+                    <IconButton onClick={props.approveUser}>
                         <CheckCircleIcon color='success' />
                     </IconButton>
                 </Tooltip>
@@ -394,10 +394,53 @@ export default function DashboardTable(tableProps) {
 
     }, [])
 
+    const approveUser = async ()=>{
+        console.log('selected----',selected);
+        try{
+
+            let obj = {
+                selected: selected
+            };
+            let approveResponse = await fetch(links.backendUrl + '/approve-user',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            })
+            if(approveResponse<200 || approveResponse>299){
+                let myErr = await approveResponse.json();
+                let myError = {
+                    message: myErr.message
+                }
+                throw myError;
+            }
+            let approveResult = await approveResponse.json();
+            // delete approvals at front end
+            let mySelected = [...selected];
+            setSelected([]);
+            mySelected.forEach((userId)=>{
+                setMyRows((state)=>{
+                    let oldState = [...state]
+                    let start = oldState.findIndex((id)=>{
+                        return id==userId;
+                    })
+                    oldState.splice(start,1);
+                    return oldState;
+                })
+            })
+            alert(approveResult.message);
+
+        }
+        catch (err){
+            alert('error--- ',err.message)
+        }
+    }
+
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2, backgroundColor: myColors.backgroundGrey }}>
-                <EnhancedTableToolbar  numSelected={selected.length} myRows={myRows} title={tableProps.title} />
+                <EnhancedTableToolbar approveUser={approveUser} numSelected={selected.length} myRows={myRows} title={tableProps.title} />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}

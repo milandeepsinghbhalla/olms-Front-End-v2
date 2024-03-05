@@ -451,9 +451,9 @@ const ProfileSetup = () => {
     const animationVariants = {
         //hidden: { x:-100, opacity: 0 },
         visible: { x: 0, opacity: 1 },
-        hidden: { x: 0, rotateY: -90, opacity: 0 },
-        exit: { x: 0, rotateY: -90, opacity: 0 },
-        entry: { x: 0, rotateY: 0, opacity: 1 }
+        hidden: { x: 0, opacity: 0 },
+        exit: { x: 0, opacity: 0 },
+        entry: { x: 0, opacity: 1 }
     }
     var step1Controls = useAnimation()
     var step2Controls = useAnimation()
@@ -473,10 +473,7 @@ const ProfileSetup = () => {
                 //ease: "easeIn"
             }}
         >
-            <Grid container p={{
-                xs: 3,
-                md: 4
-            }} className={profileSetupStyles.cardContainer} sx={{ backgroundColor: myColors.backgroundGrey, borderColor: myColors.backgroundGreyV2 }} xs={12} md={9}>
+            <Grid container   xs={12} md={12}>
                 <Grid item xs={12}  >
 
                     <InputLabel htmlFor="fullName">
@@ -658,11 +655,8 @@ const ProfileSetup = () => {
                 //ease: "easeIn"
             }}
         >
-            <Grid container p={{
-                xs: 3,
-                md: 4
-            }} className={profileSetupStyles.cardContainer} sx={{ backgroundColor: myColors.backgroundGrey, borderColor: myColors.backgroundGreyV2 }} xs={12} md={9}>
-                <Grid item xs={12} md={9}>
+            <Grid container    xs={12} md={9}>
+                <Grid item xs={12} md={12}>
                     <Typography fontWeight={300} variant="h6">
                         Company Details
                     </Typography>
@@ -761,11 +755,11 @@ const ProfileSetup = () => {
                 setTimeout(() => {
                     setStep(2)
 
-                }, 500)
+                }, 900)
                 setTimeout(() => {
 
                     step2Controls.start('entry')
-                }, 550)
+                }, 1000)
             }} size="normal" color="lightOrange">
                 Next
             </Button>
@@ -824,11 +818,11 @@ const ProfileSetup = () => {
                         setStep(1)
 
 
-                    }, 500)
+                    }, 900)
                     setTimeout(() => {
 
                         step1Controls.start('entry')
-                    }, 550)
+                    }, 1000)
                 }} size="normal" color="lightOrange"> Previous </Button>
             </Grid>
 
