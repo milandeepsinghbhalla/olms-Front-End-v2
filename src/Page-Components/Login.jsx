@@ -1,11 +1,12 @@
 import { Button, FormHelperText, Grid, Icon, InputAdornment, InputBase, InputLabel, Typography } from "@mui/material"
 import profileSetupStyles from "./ProfileSetup.module.css"
 import myColors from "../assets/Util/myColors";
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import formVerification from "../assets/Util/formVerification";
 import { alpha, styled } from '@mui/material/styles';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import links from "../assets/Util/links";
 
 
 const StyledInput = styled(InputBase)(({ theme }) => ({
@@ -49,6 +50,8 @@ const StyledInput = styled(InputBase)(({ theme }) => ({
 
 
 const Login = () => {
+
+    const [canLogin,setCanLogin] = useState(false);
 
     const formValuesreducer = (state, action) => {
 
@@ -121,6 +124,51 @@ const Login = () => {
         })
     }
 
+    const loginHandler = async ()=>{
+        let obj = {
+            email: (formValues.email.value.trim()).toLowerCase(),
+            password: formValues.password.value.trim()
+        }
+        try {
+
+            const loginResponse = await fetch(links.backendUrl + '/login',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            })
+            if(loginResponse<200 || loginResponse>299){
+                let errorResult = await loginResponse.json();
+                let myError = {
+                    message: errorResult.message
+                }
+                throw myError;
+            }
+            const loginResult = await loginResponse.json()
+            localStorage.setItem('userToken', loginResult.token)
+            alert(loginResult.message)
+        }
+        catch (err){
+            console.log('login error---',err.message)
+            alert('login error---',err.message)
+        }
+    }
+
+    useEffect(()=>{
+        let loginFlag = true
+        for(let property in formValues){
+            if(formValues[property].value != '' && formValues[property].ok){
+                // do nothing
+            }
+            else{
+                loginFlag = false;
+                break;
+            }
+        }
+        setCanLogin(loginFlag);
+    },[formValues])
+
     return (<>
         <Grid container justifyContent={'center'}>
             <Grid item mb={5} mt={15} xs={10} md={6}>
@@ -171,20 +219,9 @@ const Login = () => {
                     </Grid>
                     <Grid mt={3} item xs={3}>
                         <Button variant="contained" sx={{
-                            color: '#212100'
-                        }} fullWidth onClick={() => {
-                            // step1Controls.start('exit');
-                            // // let mycontrolerFunction = (controller,variant)=>{
-                            // //     controller.start(variant);
-                            // // }
-                            // setTimeout(() => {
-                            //     setStep(2)
-
-                            // }, 500)
-                            // setTimeout(() => {
-
-                            //     step2Controls.start('entry')
-                            // }, 550)
+                            color: myColors.textBlack
+                        }} fullWidth disabled={!canLogin} onClick={() => {
+                          loginHandler();
                         }} size="normal" color="lightOrange">
                             Login
                         </Button>
