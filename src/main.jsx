@@ -13,7 +13,9 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 import myColors from './assets/Util/myColors.js';
 import Login from './Page-Components/Login.jsx';
-import AdminDashboard from './Page-Components/AdminDashboard.jsx';
+import AdminDashboard from './Components/AdminDashboard.jsx';
+import Dashboard from './Page-Components/Dashboard.jsx';
+import HomePage from './Page-Components/HomePage.jsx';
 
 
 const router = createBrowserRouter([
@@ -31,7 +33,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard",
-        element: <AdminDashboard />
+        element: <Dashboard />
+      },
+      {
+        path: "/Home",
+        element: <HomePage />
       },
     ]
   }

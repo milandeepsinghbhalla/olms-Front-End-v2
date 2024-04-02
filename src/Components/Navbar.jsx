@@ -23,7 +23,7 @@ const Navbar = () => {
     return (
         <>
             <Box zIndex={999} sx={{ flexGrow: 1 }}>
-                <AppBar  ref={myref} m={0} p={0} color={'backgroundGrey'} position="fixed">
+                <AppBar  ref={myref} m={0} p={0} color={'transparent'} position="fixed">
                     <Toolbar p={0} m={0}>
                         {/* <IconButton
                             size="large"

@@ -1,4 +1,4 @@
-const formVerification = (value, chkTypes, formValues) => {
+const formVerification = (value, chkTypes,feildName,formvalues) => {
     let formVerificationMethods = {
 
         isNotEmpty: (value) => {
@@ -9,8 +9,8 @@ const formVerification = (value, chkTypes, formValues) => {
                 ok: !(value.trim() === "" || value === null || value === undefined || value.length === 0),
     
             }
-            obj.message = obj.ok ? "" : "This feild is Required"
-            console.log('returned value', obj)
+            obj.message = obj.ok ? "" : `${feildName} is Required`
+      console.log('returned value', obj)
             return obj;
         },
         isPhnNumber: (value) => {

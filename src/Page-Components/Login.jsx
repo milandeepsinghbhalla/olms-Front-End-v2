@@ -64,7 +64,7 @@ const Login = () => {
             //break;
             case "validateFeild":
                 myState = { ...state };
-                let errorResult = formVerification(myState[action.feildName].value, myState[action.feildName].validations);
+                let errorResult = formVerification(myState[action.feildName].value, myState[action.feildName].validations,(action.feildName[0]).toUpperCase()+action.feildName.slice(1));
                 myState[action.feildName].ok = errorResult.ok;
                 myState[action.feildName].helperText = errorResult.message;
                 return myState;
