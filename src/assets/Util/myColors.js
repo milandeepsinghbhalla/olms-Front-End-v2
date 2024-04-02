@@ -13,7 +13,8 @@ const myColors = {
     backgroundGrey: '#F5F5F5',
     transparent: '#00FFFFFF',
     backgroundGreyV2: '#E6EDF3',
-    textBlack: '#28282B'
+    textBlack: '#28282B',
+    textBlue: '#06038D'
 
 }
 

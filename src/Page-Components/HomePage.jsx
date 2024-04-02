@@ -99,7 +99,7 @@ const HomePage = () => {
 </Grid> */}
 
 
-            {/* <Grid container p={{
+         <Grid container p={{
                 xs: 4,
                 md: 9
             }} pl={{
@@ -110,7 +110,8 @@ const HomePage = () => {
                 <Grid item xs={11} md={5}>
                     <Typography id='autoType' sx={{
 
-                        color: myColors.textBlack
+                        color: myColors.textBlue
+                        
                     }} m={0} variant='h4'>
                         <Typewriter
                             onInit={(typewriter) => {
@@ -125,7 +126,7 @@ const HomePage = () => {
                         />
                     </Typography>
                 </Grid>
-                <Grid item xs={11} md={5}>
+                {/* <Grid item xs={11} md={5}>
 
                     <motion.div
                         variants={truckVariants}
@@ -143,8 +144,8 @@ const HomePage = () => {
                     </motion.div>
 
 
-                </Grid>
-            </Grid> */}
+                </Grid> */}
+            </Grid> 
         </Grid>
 
     </>
